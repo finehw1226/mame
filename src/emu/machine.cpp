@@ -920,12 +920,13 @@ void running_machine::handle_saveload()
 					break;
 
 				case STATERR_NONE:
-				{
-					const char *const opnamed = (m_saveload_schedule == saveload_schedule::LOAD) ? "Loaded" : "Saved";
-					if (!m_save.supported())
-						popmessage("%s state %s %s.\nWarning: Save states are not officially supported for this system.", opnamed, preposname, m_saveload_pending_file);
-					else
-						popmessage("%s state %s %s.", opnamed, preposname, m_saveload_pending_file);
+					if (m_saveload_schedule != saveload_schedule::LOAD)
+					{
+						if (!(m_system.flags & MACHINE_SUPPORTS_SAVE))
+							popmessage("State successfully %s.\nWarning: Save states are not officially supported for this machine.", opnamed);
+						else
+							popmessage("State successfully %s.", opnamed);
+					}
 					break;
 				}
 
